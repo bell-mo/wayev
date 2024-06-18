@@ -1,11 +1,13 @@
 package com.wayev.classes;
 
 import com.wayev.entities.Edge;
+import com.wayev.entities.Polyline;
 import com.wayev.entities.Vertex;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.lang.Nullable;
 
 import java.util.*;
 
@@ -17,6 +19,18 @@ public class Graph {
     private List<Vertex> vertices = new ArrayList<>();
     @NonNull
     private List<Edge> edges = new ArrayList<>();
+    @NonNull
+    private Map<Long, List<Polyline>> polylines = new HashMap<>();
+
+    Double startCharge;
+
+    Double endCharge;
+
+    Vertex start;
+
+    Vertex end;
+
+    Double range;
 
     // Добавление вершины
     public void addVertex(Vertex vertex) {
@@ -26,6 +40,23 @@ public class Graph {
     // Добавление ребра
     public void addEdge(Edge edge) {
         edges.add(edge);
+    }
+
+    public void addPolyline(Long edgeId, List<Polyline> polyline) {
+        polylines.put(edgeId, polyline);
+    }
+
+    private int findEdgeIndex(Edge edge) {
+        for (int i = 0; i < edges.size(); i++) {
+            if (edge.getId().equals(edges.get(i).getId())) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public void setEdge(Edge edge) {
+        edges.set(findEdgeIndex(edge), edge);
     }
 
     // Получение списка смежных вершин для данной вершины
@@ -39,19 +70,38 @@ public class Graph {
         return adjacentVertices;
     }
 
+    public List<Vertex> getAdjacentVerticesReverse(Vertex vertex) {
+        List<Vertex> adjacentVertices = new ArrayList<>();
+        for (Edge edge : edges) {
+            if (edge.getDestination().equals(vertex)) {
+                adjacentVertices.add(edge.getSource());
+            }
+        }
+        return adjacentVertices;
+    }
+
     // Получение веса ребра между двумя вершинами
     public double getEdgeWeight(Vertex source, Vertex destination) {
         for (Edge edge : edges) {
             if (edge.getSource().equals(source) && edge.getDestination().equals(destination)) {
-                return edge.getWeight();
+                return edge.getDuration();
             }
         }
         return Double.POSITIVE_INFINITY;
     }
 
+    public Edge getEdge(Vertex source, Vertex destination) {
+        for (Edge edge : edges) {
+            if (edge.getSource().equals(source) && edge.getDestination().equals(destination)) {
+                return edge;
+            }
+        }
+        return null;
+    }
+
     // Эвристическая функция (евклидово расстояние)
     private double heuristic(Vertex v1, Vertex v2) {
-        return Math.sqrt(Math.pow(v1.getX() - v2.getX(), 2) + Math.pow(v1.getY() - v2.getY(), 2));
+        return Math.sqrt(Math.pow(v1.getLongitude() - v2.getLongitude(), 2) + Math.pow(v1.getLatitude() - v2.getLatitude(), 2));
     }
 
     // Реализация алгоритма A*

@@ -18,10 +18,10 @@ public class Vertex {
     private String label;
 
     @Column
-    private double x;
+    private double longitude;
 
     @Column
-    private double y;
+    private double latitude;
 
     // Конструктор, геттеры, сеттеры, equals, hashCode и toString будут сгенерированы автоматически
 }

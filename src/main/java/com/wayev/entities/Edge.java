@@ -1,5 +1,6 @@
 package com.wayev.entities;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import jakarta.persistence.*;
 
@@ -20,6 +21,9 @@ public class Edge {
     private Vertex destination;
 
     @Column
-    private double weight;
+    private double distance;
+
+    @Column
+    private double duration;
 
 }
