@@ -18,6 +18,9 @@ public class Vertex {
     private String label;
 
     @Column
+    private String address;
+
+    @Column
     private double longitude;
 
     @Column

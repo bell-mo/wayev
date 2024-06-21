@@ -22,6 +22,6 @@ public class Polyline {
     @Column
     private double latitude;
 
-    @Column
+    @Column(name = "point_order")
     private int order;
 }

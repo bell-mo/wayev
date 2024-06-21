@@ -33,7 +33,7 @@ public class GraphService {
     @Autowired
     private RestTemplate restTemplate;
 
-    @Value("${mapbox.api.url}")
+    @Value("${mapbox.api.geocoding.url}")
     private String mapboxApiUrl;
 
     @Value("${mapbox.api.token}")
@@ -67,7 +67,7 @@ public class GraphService {
 
     public MapboxResponseDto getEdgeFromMapbox(Vertex source, Vertex destination) {
         String coordinates = source.getLongitude() + "," + source.getLatitude() + ";" + destination.getLongitude() + "," + destination.getLatitude();
-        String url = String.format("%s/%s?access_token=%s", mapboxApiUrl, coordinates, mapboxApiToken);
+        String url = String.format("%s/%s?geometries=geojson&access_token=%s", mapboxApiUrl, coordinates, mapboxApiToken);
 
         MapboxResponse response = restTemplate.getForObject(url, MapboxResponse.class);
         if (response != null && !response.getRoutes().isEmpty()) {

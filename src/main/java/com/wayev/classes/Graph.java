@@ -13,7 +13,6 @@ import java.util.*;
 
 @Data
 @NoArgsConstructor
-@RequiredArgsConstructor
 public class Graph {
     @NonNull
     private List<Vertex> vertices = new ArrayList<>();
@@ -21,6 +20,10 @@ public class Graph {
     private List<Edge> edges = new ArrayList<>();
     @NonNull
     private Map<Long, List<Polyline>> polylines = new HashMap<>();
+    @NonNull
+    private Map<String, Double> chargeLevels = new HashMap<>();
+    @NonNull
+    private Map<String, Double> chargeTimes = new HashMap<>();
 
     Double startCharge;
 
@@ -39,12 +42,22 @@ public class Graph {
 
     // Добавление ребра
     public void addEdge(Edge edge) {
-        edges.add(edge);
+        List<Edge> newEdges = new ArrayList<>(edges);
+        newEdges.add(edge);
+        edges = newEdges;
     }
 
     public void addPolyline(Long edgeId, List<Polyline> polyline) {
         polylines.put(edgeId, polyline);
     }
+
+    public void addChargeLevel(String vertexId, Double chargeLevel) { chargeLevels.put(vertexId, chargeLevel); }
+
+    public Double getChargeLevel(String vertexId) { return chargeLevels.get(vertexId); }
+
+    public void addChargeTime(String vertexId, Double chargeTime) { chargeTimes.put(vertexId, chargeTime); }
+
+    public Double getChargeTime(String vertexId) { return chargeTimes.get(vertexId); }
 
     private int findEdgeIndex(Edge edge) {
         for (int i = 0; i < edges.size(); i++) {
